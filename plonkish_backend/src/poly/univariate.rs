@@ -285,6 +285,29 @@ impl<F: Field> UnivariatePolynomial<F> {
 
         UnivariatePolynomial::monomial(result)
     }
+
+    pub fn shift(&self, n: i32) -> UnivariatePolynomial<F>
+    where
+        F: Field
+    {
+        assert_eq!(self.basis, Lagrange);
+
+        let size = self.coeffs.len();
+        let now = {
+            let remain = n%(size as i32);
+            if remain < 0 {
+                (remain+size as i32) as usize
+            } else {
+                remain as usize
+            }
+        };
+        let result = self.coeffs[now..]
+            .iter()
+            .chain(self.coeffs[..now].iter())
+            .cloned()
+            .collect();
+        UnivariatePolynomial::lagrange(result)
+    }
 }
 
 impl<F: Field> Neg for UnivariatePolynomial<F> {
@@ -489,6 +512,14 @@ impl<F: Field> Mul<&F> for &UnivariatePolynomial<F> {
         let mut output = self.clone();
         output *= rhs;
         output
+    }
+}
+
+impl<F: Field> Mul<&F> for UnivariatePolynomial<F> {
+    type Output = UnivariatePolynomial<F>;
+
+    fn mul(self, rhs: &F) -> UnivariatePolynomial<F> {
+        &self * rhs
     }
 }
 

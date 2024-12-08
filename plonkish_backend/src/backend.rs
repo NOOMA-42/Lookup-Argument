@@ -16,6 +16,7 @@ pub mod hyperplonk;
 pub mod unihyperplonk;
 pub mod baloo;
 pub mod cq;
+pub mod plookup;
 
 pub trait PlonkishBackend<F: Field>: Clone + Debug {
     type Pcs: PolynomialCommitmentScheme<F>;
@@ -51,7 +52,7 @@ pub trait PlonkishBackend<F: Field>: Clone + Debug {
 pub struct PlonkishCircuitInfo<F> {
     /// 2^k is the size of the circuit
     pub k: usize,
-    /// Number of instnace value in each instance polynomial.
+    /// Number of instance value in each instance polynomial.
     pub num_instances: Vec<usize>,
     /// Preprocessed polynomials, which has index starts with offset
     /// `num_instances.len()`.
